@@ -1,0 +1,1 @@
+This is a practice project to learn how to use HTML5 canvas, draw shapes, add animation and add interactions.
