@@ -1,6 +1,8 @@
-var canvas = document.querySelector('canvas');
 // searching HTML doc for HTML doc = canvas and assign it
+var canvas = document.querySelector('canvas');
 
+
+// setting on load responsive size
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -9,8 +11,31 @@ canvas.height = window.innerHeight;
 var c = canvas.getContext('2d');
 
 
+// interaction using event listener
 
-// function with Capital letter = js object
+var mouse = {
+    x: undefined, y: undefined
+}
+
+
+
+window.addEventListener('mousemove', 
+function(event){
+    mouse.x = event.x;
+    mouse.y = event.y;
+});
+
+// defining interaction animation parameters
+var maxRadius = 40;
+var minRadius = 2;
+var area = 20;
+
+var colorArray = [
+
+]
+
+
+// creating a javascript object for circles
 function Circle(x, y, dx, dy, radius) {
     this.x = x;
     this.y = y;
@@ -18,6 +43,7 @@ function Circle(x, y, dx, dy, radius) {
     this.dy = dy;
     this.radius = radius;
 
+    // drawing the circle
     this.draw = function() {
         c.beginPath();
         c.arc(this.x,this.y,this.radius,0,Math.PI * 2, false)
@@ -25,6 +51,7 @@ function Circle(x, y, dx, dy, radius) {
         c.strokeStyle = '#00bdff';
     }
 
+    // setting bounce back via negative velocity when reaches borders
     this.update = function() {
 
         if(this.x + this.radius > innerWidth || this.x - this.radius < 0){
@@ -35,9 +62,23 @@ function Circle(x, y, dx, dy, radius) {
             this.dy = -this.dy;
         }
     
+        // this is the commands that triggers the change of frame with delta = dx/dy
         this.x += this.dx;
         this.y += this.dy;
         
+
+        // whenever the mouse position is within 50 from the circle - increase radius
+        if(mouse.x - this.x < area && mouse.x > -area && mouse.y - this.y < area && mouse.y > -area) {
+            if (this.radius < maxRadius) {
+                this.radius +=1;
+            }
+            
+            
+        } else if (this.radius > minRadius) {
+            this.radius -=1;
+        }
+
+
         this.draw();
     }
 
@@ -45,24 +86,26 @@ function Circle(x, y, dx, dy, radius) {
 
 
 
-// Creating an array to store the circle i'll be generating
+
+
+
+// creating an array to store the circles that will be generated
 var circleArray = [];
 
 
-
+// generating an array if cicle objects
 for(var i = 0; i <100; i++){
     var radius = 30;
     // need to adjust for the radius to avoid them spawn outside of the canvas
     var x = Math.random() * (innerWidth-radius * 2) + radius;
     var y = Math.random() * (innerHeight-radius * 2) + radius;
-    var dx = (Math.random() - 0.5) * 10; // horizontal velocity
-    var dy = (Math.random() - 0.5) * 10; // vertical velocity
+    var dx = (Math.random() - 0.5) * 5; // horizontal velocity
+    var dy = (Math.random() - 0.5) * 5; // vertical velocity
 
+    // on every iteration I push the circle in
     circleArray.push(new Circle(x, y, dx, dy, radius));
-
 }
 
-console.log(circleArray);
 
 // NOTE:
 // to instantiate a new object you need to set "new" in front
@@ -70,12 +113,14 @@ console.log(circleArray);
 
 
 
-// creating an animation loop with animate fx
+// creating a function to create an animation loop
 function animate () {
+    // this is the framework function that calls for the next frame
     requestAnimationFrame(animate);
     // clearing the canvas each time we go through this loop
     c.clearRect(0,0,innerWidth, innerHeight)
 
+    // For every circle object in array - get me the next frame using the .update() fn of the obj.
     for (var i = 0; i < circleArray.length; i++) {
         circleArray[i].update();
         
