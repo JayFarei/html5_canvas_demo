@@ -2,7 +2,9 @@
 var canvas = document.querySelector('canvas');
 
 
-// setting on load responsive size
+// canvas size to dynamically adjust with the page
+
+// at load time
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -25,14 +27,37 @@ function(event){
     mouse.y = event.y;
 });
 
+// calling the canvas adjustment every time the window is resized
+window.addEventListener('resize',
+    function(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // reset circle generation on resize
+        init();
+        this.console.log(circleArray);
+    }
+)
+
+
+
 // defining interaction animation parameters
-var maxRadius = 40;
-var minRadius = 2;
-var area = 20;
+var maxRadius = 30;
+var minRadius = 20;
+var area = 50;
 
 var colorArray = [
+    '#cc5803',
+    '#e2711d',
+    '#ff9595',
+    '#ffb627',
+    '#ffc971',
+];
 
-]
+// Random colour generator
+function randomColor(colors) {
+    return colors[Math.floor(Math.random() * colors.length)]
+  }
 
 
 // creating a javascript object for circles
@@ -42,18 +67,31 @@ function Circle(x, y, dx, dy, radius) {
     this.dx = dx;
     this.dy = dy;
     this.radius = radius;
+    this.minRadius = radius;
+    this.colour = randomColor(colorArray)
 
     // drawing the circle
     this.draw = function() {
         c.beginPath();
-        c.arc(this.x,this.y,this.radius,0,Math.PI * 2, false)
-        c.stroke();
-        c.strokeStyle = '#00bdff';
+        c.arc(this.x,this.y,this.radius,0,Math.PI * 2, false);
+        c.fillStyle = this.colour;
+        c.fill()
     }
 
-    // setting bounce back via negative velocity when reaches borders
+    // update function for every frame
     this.update = function() {
 
+        // whenever the mouse position is within "area" from the circle - increase radius
+        if(mouse.x - this.x < area && mouse.x - this.x > -area && mouse.y - this.y < area && mouse.y - this.y > -area) {
+            if (this.radius < maxRadius) {
+            this.radius +=1;
+        }
+    
+        } else if (this.radius > this.minRadius) {
+        this.radius -=1;
+        }
+
+        // setting bounce back via negative velocity when reaches borders
         if(this.x + this.radius > innerWidth || this.x - this.radius < 0){
             this.dx = -this.dx;
         }
@@ -67,19 +105,61 @@ function Circle(x, y, dx, dy, radius) {
         this.y += this.dy;
         
 
-        // whenever the mouse position is within 50 from the circle - increase radius
-        if(mouse.x - this.x < area && mouse.x > -area && mouse.y - this.y < area && mouse.y > -area) {
-            if (this.radius < maxRadius) {
-                this.radius +=1;
-            }
-            
-            
-        } else if (this.radius > minRadius) {
-            this.radius -=1;
-        }
-
-
         this.draw();
+    }
+
+}
+
+
+// // OPTION 1: 
+// // Removing the init() function from startup and resize generated an effect that allows circles to expand in the new window size rather than regenerate
+
+
+// // creating an array to store the circles that will be generated
+// var circleArray = [];
+
+
+// // generating an array if circle objects
+// for(var i = 0; i <800; i++){
+//     var radius = Math.random()* 3 + 1;
+//     // need to adjust for the radius to avoid them spawn outside of the canvas
+//     var x = Math.random() * (innerWidth-radius * 2) + radius;
+//     var y = Math.random() * (innerHeight-radius * 2) + radius;
+//     var dx = (Math.random() - 0.5) * 5; // horizontal velocity
+//     var dy = (Math.random() - 0.5) * 5; // vertical velocity
+
+//     // on every iteration I push the circle in
+//     circleArray.push(new Circle(x, y, dx, dy, radius));
+// }
+
+
+
+// OPTIONAL:
+// To re-generate circles on the resized window rather than expanding the existing one 
+
+var circleArray = [];
+
+function init() {
+
+    // resetting the array
+    circleArray = [];
+
+    // generate new array of circles filling the bigger window size
+    for(var i = 0; i <800; i++){
+        var radius = Math.random()* 3 + 1;
+        // need to adjust for the radius to avoid them spawn outside of the canvas
+        var x = Math.random() * (innerWidth-radius * 2) + radius;
+        var y = Math.random() * (innerHeight-radius * 2) + radius;
+        var dx = (Math.random() - 0.5) * 5; // horizontal velocity
+        var dy = (Math.random() - 0.5) * 5; // vertical velocity
+    
+        // on every iteration I push the circle in
+
+    
+        // NOTE:
+        // to instantiate a new object you need to set "new" in front
+        // var circle = new Circle(200,200,3,3,30);
+        circleArray.push(new Circle(x, y, dx, dy, radius));
     }
 
 }
@@ -89,27 +169,9 @@ function Circle(x, y, dx, dy, radius) {
 
 
 
-// creating an array to store the circles that will be generated
-var circleArray = [];
 
 
-// generating an array if cicle objects
-for(var i = 0; i <100; i++){
-    var radius = 30;
-    // need to adjust for the radius to avoid them spawn outside of the canvas
-    var x = Math.random() * (innerWidth-radius * 2) + radius;
-    var y = Math.random() * (innerHeight-radius * 2) + radius;
-    var dx = (Math.random() - 0.5) * 5; // horizontal velocity
-    var dy = (Math.random() - 0.5) * 5; // vertical velocity
 
-    // on every iteration I push the circle in
-    circleArray.push(new Circle(x, y, dx, dy, radius));
-}
-
-
-// NOTE:
-// to instantiate a new object you need to set "new" in front
-// var circle = new Circle(200,200,3,3,30);
 
 
 
@@ -117,7 +179,7 @@ for(var i = 0; i <100; i++){
 function animate () {
     // this is the framework function that calls for the next frame
     requestAnimationFrame(animate);
-    // clearing the canvas each time we go through this loop
+    // clearing the canvas each time we go through this loop to avoid "trail" effect
     c.clearRect(0,0,innerWidth, innerHeight)
 
     // For every circle object in array - get me the next frame using the .update() fn of the obj.
@@ -128,63 +190,5 @@ function animate () {
 
 }
 
+init();
 animate();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Experiments
-
-// c.fillStyle = 'rgba(255,0,0,0.5)';
-// c.fillRect (100,100,50,50);
-
-// c.fillStyle = 'rgba(0,0,255,0.5)';
-// c.fillRect (200,300,50,50);
-
-
-// // Line
-
-// c.beginPath();
-// c.moveTo(50,300);
-// c.lineTo(300,100);
-// c.lineTo(400,300);
-// c.strokeStyle = "blue";
-// c.stroke();
-
-// // Create Arc/Circle
-// c.beginPath();
-// // this separates this from the previous path
-// c.arc(300,300,30,0,Math.PI * 2, false)
-// c.stroke();
-// c.strokeStyle = '#00bdff';
-
-
-
-// // Randomizing colour selection
-
-// const colors = ['#00bdff','#4d39ce','#038eff']
-
-// function randomColor(colors) {
-//     return colors[Math.floor(Math.random() * colors.length)]
-//   }
-
-// for(var i=0; i < 300; i++){
-//     var x = Math.random() * window.innerWidth ;
-//     var y = Math.random() * window.innerHeight ;
-//     c.beginPath();
-//     c.arc(x,y,30,0,Math.PI * 2, false)
-//     c.stroke();
-//     c.strokeStyle = randomColor(colors).toString();
-//     console.log(randomColor(colors).toString());
-// }
