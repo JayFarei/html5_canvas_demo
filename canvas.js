@@ -9,23 +9,9 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 
+// RESPONSIVENESS
 // loading functions to draw in variable c
 var c = canvas.getContext('2d');
-
-
-// interaction using event listener
-
-var mouse = {
-    x: undefined, y: undefined
-}
-
-
-
-window.addEventListener('mousemove', 
-function(event){
-    mouse.x = event.x;
-    mouse.y = event.y;
-});
 
 // calling the canvas adjustment every time the window is resized
 window.addEventListener('resize',
@@ -35,11 +21,27 @@ window.addEventListener('resize',
         
         // reset circle generation on resize
         init();
-        this.console.log(circleArray);
     }
 )
 
 
+// INTERACTIVITY INPUTS
+
+// interaction using event listener
+
+var mouse = {
+    x: undefined, y: undefined
+}
+
+window.addEventListener('mousemove', 
+function(event){
+    mouse.x = event.x;
+    mouse.y = event.y;
+});
+
+
+
+// VARIABLES OF THE CANVAS
 
 // defining interaction animation parameters
 var maxRadius = 30;
@@ -54,11 +56,15 @@ var colorArray = [
     '#ffc971',
 ];
 
+
+
 // Random colour generator
 function randomColor(colors) {
     return colors[Math.floor(Math.random() * colors.length)]
   }
 
+
+// OBJECTS IN THE CANVAS
 
 // creating a javascript object for circles
 function Circle(x, y, dx, dy, radius) {
@@ -109,6 +115,9 @@ function Circle(x, y, dx, dy, radius) {
     }
 
 }
+
+
+// GENERATION OF ARRAY OF CIRCLES (AT FIRST LOAD OR ON RESIZE AS WELL)
 
 
 // // OPTION 1: 
@@ -169,10 +178,7 @@ function init() {
 
 
 
-
-
-
-
+// ANIMATION ON EACH FRAME
 
 
 // creating a function to create an animation loop
@@ -189,6 +195,10 @@ function animate () {
     }
 
 }
+
+
+
+// EXECUTING THE ANIMATION
 
 init();
 animate();
