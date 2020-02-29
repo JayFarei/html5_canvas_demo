@@ -117,33 +117,7 @@ function Circle(x, y, dx, dy, radius) {
 }
 
 
-// GENERATION OF ARRAY OF CIRCLES (AT FIRST LOAD OR ON RESIZE AS WELL)
-
-
-// // OPTION 1: 
-// // Removing the init() function from startup and resize generated an effect that allows circles to expand in the new window size rather than regenerate
-
-
-// // creating an array to store the circles that will be generated
-// var circleArray = [];
-
-
-// // generating an array if circle objects
-// for(var i = 0; i <800; i++){
-//     var radius = Math.random()* 3 + 1;
-//     // need to adjust for the radius to avoid them spawn outside of the canvas
-//     var x = Math.random() * (innerWidth-radius * 2) + radius;
-//     var y = Math.random() * (innerHeight-radius * 2) + radius;
-//     var dx = (Math.random() - 0.5) * 5; // horizontal velocity
-//     var dy = (Math.random() - 0.5) * 5; // vertical velocity
-
-//     // on every iteration I push the circle in
-//     circleArray.push(new Circle(x, y, dx, dy, radius));
-// }
-
-
-
-// OPTIONAL:
+// GENERATION OF ARRAY OF CIRCLES 
 // To re-generate circles on the resized window rather than expanding the existing one 
 
 var circleArray = [];
@@ -154,7 +128,7 @@ function init() {
     circleArray = [];
 
     // generate new array of circles filling the bigger window size
-    for(var i = 0; i <800; i++){
+    for(var i = 0; i <600; i++){
         var radius = Math.random()* 3 + 1;
         // need to adjust for the radius to avoid them spawn outside of the canvas
         var x = Math.random() * (innerWidth-radius * 2) + radius;
