@@ -40,7 +40,6 @@ function(event){
 });
 
 
-
 // VARIABLES OF THE CANVAS
 
 // defining interaction animation parameters
@@ -86,16 +85,6 @@ function Circle(x, y, dx, dy, radius) {
 
     // update function for every frame
     this.update = function() {
-
-        // whenever the mouse position is within "area" from the circle - increase radius
-        if(mouse.x - this.x < area && mouse.x - this.x > -area && mouse.y - this.y < area && mouse.y - this.y > -area) {
-            if (this.radius < maxRadius) {
-            this.radius +=1;
-        }
-    
-        } else if (this.radius > this.minRadius) {
-        this.radius -=1;
-        }
 
         // setting bounce back via negative velocity when reaches borders
         if(this.x + this.radius > innerWidth || this.x - this.radius < 0){
@@ -148,12 +137,7 @@ function init() {
 }
 
 
-
-
-
-
 // ANIMATION ON EACH FRAME
-
 
 // creating a function to create an animation loop
 function animate () {
@@ -169,8 +153,6 @@ function animate () {
     }
 
 }
-
-
 
 // EXECUTING THE ANIMATION
 
