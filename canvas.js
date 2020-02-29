@@ -9,23 +9,9 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 
+// RESPONSIVENESS
 // loading functions to draw in variable c
 var c = canvas.getContext('2d');
-
-
-// interaction using event listener
-
-var mouse = {
-    x: undefined, y: undefined
-}
-
-
-
-window.addEventListener('mousemove', 
-function(event){
-    mouse.x = event.x;
-    mouse.y = event.y;
-});
 
 // calling the canvas adjustment every time the window is resized
 window.addEventListener('resize',
@@ -35,11 +21,27 @@ window.addEventListener('resize',
         
         // reset circle generation on resize
         init();
-        this.console.log(circleArray);
     }
 )
 
 
+// INTERACTIVITY INPUTS
+
+// interaction using event listener
+
+var mouse = {
+    x: undefined, y: undefined
+}
+
+window.addEventListener('mousemove', 
+function(event){
+    mouse.x = event.x;
+    mouse.y = event.y;
+});
+
+
+
+// VARIABLES OF THE CANVAS
 
 // defining interaction animation parameters
 var maxRadius = 30;
@@ -54,11 +56,15 @@ var colorArray = [
     '#ffc971',
 ];
 
+
+
 // Random colour generator
 function randomColor(colors) {
     return colors[Math.floor(Math.random() * colors.length)]
   }
 
+
+// OBJECTS IN THE CANVAS
 
 // creating a javascript object for circles
 function Circle(x, y, dx, dy, radius) {
@@ -111,30 +117,7 @@ function Circle(x, y, dx, dy, radius) {
 }
 
 
-// // OPTION 1: 
-// // Removing the init() function from startup and resize generated an effect that allows circles to expand in the new window size rather than regenerate
-
-
-// // creating an array to store the circles that will be generated
-// var circleArray = [];
-
-
-// // generating an array if circle objects
-// for(var i = 0; i <800; i++){
-//     var radius = Math.random()* 3 + 1;
-//     // need to adjust for the radius to avoid them spawn outside of the canvas
-//     var x = Math.random() * (innerWidth-radius * 2) + radius;
-//     var y = Math.random() * (innerHeight-radius * 2) + radius;
-//     var dx = (Math.random() - 0.5) * 5; // horizontal velocity
-//     var dy = (Math.random() - 0.5) * 5; // vertical velocity
-
-//     // on every iteration I push the circle in
-//     circleArray.push(new Circle(x, y, dx, dy, radius));
-// }
-
-
-
-// OPTIONAL:
+// GENERATION OF ARRAY OF CIRCLES 
 // To re-generate circles on the resized window rather than expanding the existing one 
 
 var circleArray = [];
@@ -145,7 +128,7 @@ function init() {
     circleArray = [];
 
     // generate new array of circles filling the bigger window size
-    for(var i = 0; i <800; i++){
+    for(var i = 0; i <600; i++){
         var radius = Math.random()* 3 + 1;
         // need to adjust for the radius to avoid them spawn outside of the canvas
         var x = Math.random() * (innerWidth-radius * 2) + radius;
@@ -169,10 +152,7 @@ function init() {
 
 
 
-
-
-
-
+// ANIMATION ON EACH FRAME
 
 
 // creating a function to create an animation loop
@@ -189,6 +169,10 @@ function animate () {
     }
 
 }
+
+
+
+// EXECUTING THE ANIMATION
 
 init();
 animate();
