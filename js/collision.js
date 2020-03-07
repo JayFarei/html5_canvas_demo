@@ -71,13 +71,13 @@ function randomColor(colors) {
 // OBJECTS IN THE CANVAS
 
 // creating a javascript object for circles
-function Circle(x, y, velocity, radius) {
+function Circle(x, y, velocity, radius,mass) {
     this.x = x;
     this.y = y;
     this.velocity = velocity;
     this.radius = radius;
     this.colour = randomColor(colorArray)
-    this.mass = 1; // hardcoded mass for elastic collision function
+    this.mass = mass; // hardcoded mass for elastic collision function
 
     // drawing the circle
     this.draw = function() {
@@ -223,6 +223,8 @@ function init() {
             x: (Math.random() - 0.5) * speedMultiple, // horizontal velocity 
             y: (Math.random() - 0.5) * speedMultiple // vertical velocity
         }
+
+        var mass = 1;
     
         // if generation overlaps - regenerate x and y coordinates
         if (i != 0) {
@@ -243,7 +245,7 @@ function init() {
         // NOTE:
         // to instantiate a new object you need to set "new" in front
         // var circle = new Circle(200,200,3,3,30);
-        circleArray.push(new Circle(x, y, velocity, radius));
+        circleArray.push(new Circle(x, y, velocity, radius,mass));
     }
 
 }
